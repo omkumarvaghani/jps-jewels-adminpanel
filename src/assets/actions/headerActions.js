@@ -29,7 +29,7 @@ export const fetchHeaderData = () => async (dispatch) => {
     if (storedData) {
       dispatch(setHeaderData(JSON.parse(storedData)));
     } else {
-      const res = await axios.get("http://localhost:4002/api/user/countdata");
+      const res = await axios.get("https://jpsjewels.com/api/user/countdata");
       if (res.status === 200) {
         dispatch(setHeaderData(res.data.data));
         sessionStorage.setItem("headerData", JSON.stringify(res.data.data));

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:4002/api/superadmin/token_data"; // Your API endpoint
+const API_URL = "https://jpsjewels.com/api/superadmin/token_data"; // Your API endpoint
 
 // const getToken = () => {
 
@@ -16,7 +16,7 @@ const baseUrl = process.env.REACT_APP_BASE_API;
 
 
 export const handleAuth = async (navigate) => {
-  const API_URL = "http://localhost:4002/api/superadmin/token_data";
+  const API_URL = "https://jpsjewels.com/api/superadmin/token_data";
   // const token = localStorage.getItem("authToken");
   const token = getToken();
 
