@@ -1,6 +1,7 @@
 import axios from "axios";
+const baseUrl = process.env.REACT_APP_BASE_API;
 
-const API_URL = "https://jpsjewels.com/api/superadmin/token_data"; // Your API endpoint
+const API_URL = `${baseUrl}/superadmin/token_data`; // Your API endpoint
 
 // const getToken = () => {
 
@@ -12,11 +13,9 @@ const getToken = () => {
   }
   return null;
 };
-const baseUrl = process.env.REACT_APP_BASE_API;
-
 
 export const handleAuth = async (navigate) => {
-  const API_URL = "https://jpsjewels.com/api/superadmin/token_data";
+  const API_URL = `${baseUrl}/superadmin/token_data`;
   // const token = localStorage.getItem("authToken");
   const token = getToken();
 
@@ -27,7 +26,6 @@ export const handleAuth = async (navigate) => {
   }
 
   try {
-
     const res = await axios.post(
       `${baseUrl}/superadmin/token_data`,
       { token }, // Empty body
@@ -35,7 +33,6 @@ export const handleAuth = async (navigate) => {
         headers: { Authorization: `Bearer ${token}` },
       }
     );
-
 
     if (res.data.statusCode !== 200) {
       localStorage.clear();

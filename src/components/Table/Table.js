@@ -9,6 +9,7 @@ import {
   Collapse,
   TableFooter,
 } from "@mui/material";
+import nodata from "../../assets/img/theme/no-data.png";
 
 const CustomTable = ({
   headerData,
@@ -98,7 +99,21 @@ const CustomTable = ({
                 className="text-blue-color"
                 colSpan={headerData?.length}
               >
-                Data Not Available
+                <div style={{ flexDirection: "column", display: "flex" }}>
+                  <div>
+                    <img
+                      src={nodata}
+                      style={{
+                        height: "40px",
+                        width: "40px",
+                        margin: "auto",
+                        justifyContent: "content",
+                        display: "flex",
+                      }}
+                    />
+                  </div>
+                  Data Not Available
+                </div>
               </TableCell>
             </TableRow>
           )}

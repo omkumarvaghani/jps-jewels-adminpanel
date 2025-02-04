@@ -33,6 +33,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import CustomTable from "../../components/Table/Table";
 import JobberSearch from "../../components/Search/Search";
 import JobberPagination from "../../components/Pagination/Pagination";
+import showToast from "../../components/Toast/Toast";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import swal from "sweetalert";
 
 const Tableuser = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -56,8 +60,8 @@ const Tableuser = () => {
     try {
       const res = await axios.get(`${baseUrl}/billing/billingdata`);
       if (res.status === 200) {
-        setData(res.data.result.data);
-        setCountData(res.data.result.TotalConut || 0);
+        setData(res.data.data);
+        setCountData(res.data.totalCount || 0);
       }
     } catch (error) {
       console.error("Error fetching customer data:", error.message || error);
@@ -114,7 +118,6 @@ const Tableuser = () => {
       const response = await axios.get(
         `${baseUrl}/billing/billingpopup?BillingId=${rowData}`
       );
-      console.log(response,"response")
       if (response.status === 200) {
         setDialogData(response.data.data);
       } else {
@@ -129,6 +132,45 @@ const Tableuser = () => {
   const handleImageClick = (imgUrl) => {
     setImageUrl(imgUrl);
     setOpen(true);
+  };
+
+  const deleteuser = async (BillingId) => {
+    try {
+      const willDelete = await swal({
+        title: "Are you sure?",
+        text: "You want to delete this order?",
+        icon: "warning",
+        buttons: ["Cancel", "Delete"],
+        dangerMode: true,
+      });
+
+      if (willDelete) {
+        const response = await axios.delete(
+          `${baseUrl}/billing/updatebilingdata/${BillingId}`
+        );
+
+        if (response.status === 200) {
+          toast.success("Order deleted successfully", {
+            position: "top-center",
+            autoClose: 2000,
+          });
+
+          getData();
+          if (data.length === 1) {
+            setData([]);
+          }
+        } else {
+          showToast.error("Failed to delete the Order. Please try again.");
+        }
+      } else {
+      }
+    } catch (error) {
+      console.error("Error deleting Order:", error.message || error);
+      showToast.error(
+        "An error occurred while deleting the Order. Please try again."
+      );
+      setDialogData(null);
+    }
   };
 
   return (
@@ -159,6 +201,7 @@ const Tableuser = () => {
                       "Sku",
                       "Order Date",
                       "Image",
+                      "Delete",
                     ]}
                     isDialog={true}
                     cellData={currentData.map((user, index) => ({
@@ -184,6 +227,14 @@ const Tableuser = () => {
                             handleImageClick(user.Image);
                           }}
                         />,
+                        <i
+                          className="fa-solid fa-trash"
+                          style={{ display: "flex", justifyContent: "center" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteuser(user.BillingId); // Pass the UserId correctly
+                          }}
+                        ></i>,
                       ],
                     }))}
                     onDialogOpen={handleDialogOpen}
@@ -205,6 +256,7 @@ const Tableuser = () => {
           </div>
         </Row>
       </Container>
+      <ToastContainer />
 
       <div style={{ width: "100%" }}>
         <Dialog
@@ -341,6 +393,87 @@ const Tableuser = () => {
                 <p>
                   <strong className="Heading">Sku Id:</strong>{" "}
                   {dialogData?.[0]?.SKU || "N/A"}
+                </p>
+
+                <p>
+                  <strong className="Heading">Video:</strong>{" "}
+                  <span>
+                    <a
+                      href={dialogData?.[0]?.stockDetails?.[0]?.Video || "N/A"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: "#4e54c8",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      {dialogData?.[0]?.stockDetails?.[0]?.Video &&
+                      dialogData?.[0]?.stockDetails?.[0]?.Video.length > 10
+                        ? dialogData?.[0]?.stockDetails?.[0]?.Video.substring(
+                            0,
+                            10
+                          ) + "..."
+                        : dialogData?.[0]?.stockDetails?.[0]?.Video || "N/A"}
+                    </a>
+                  </span>
+                </p>
+                <p>
+                  <strong className="Heading">Tinge:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.Tinge || "N/A"}
+                </p>
+              </div>
+              <div>
+                <p>
+                  <strong className="Heading">Certificate No:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.CertificateNo || "N/A"}
+                </p>
+                <p>
+                  <strong className="Heading">Depth:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.Depth || "N/A"}
+                </p>
+                <p>
+                  <strong className="Heading">Disc:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.Disc || "N/A"}
+                </p>
+                <p>
+                  <strong className="Heading">EyeC:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.EyeC || "N/A"}
+                </p>
+                <p>
+                  <strong className="Heading">Fluo Int:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.FluoInt || "N/A"}
+                </p>
+                <p>
+                  <strong className="Heading">Lab:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.Lab || "N/A"}
+                </p>
+                <p>
+                  <strong className="Heading">Milky:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.Milky || "N/A"}
+                </p>
+                <p>
+                  <strong className="Heading">Polish:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.Polish || "N/A"}
+                </p>
+                <p>
+                  <strong className="Heading">Rap:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.Rap || "N/A"}
+                </p>
+                <p>
+                  <strong className="Heading">Ratio:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.Ratio || "N/A"}
+                </p>
+                <p>
+                  <strong className="Heading">SrNo:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.SrNo || "N/A"}
+                </p>
+                <p>
+                  <strong className="Heading">Symm:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.Symm || "N/A"}
+                </p>
+                <p>
+                  <strong className="Heading">Table:</strong>{" "}
+                  {dialogData?.[0]?.stockDetails?.[0]?.Table || "N/A"}
                 </p>
               </div>
             </div>

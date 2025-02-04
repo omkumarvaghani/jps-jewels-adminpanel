@@ -28,6 +28,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import CustomTable from "../../components/Table/Table";
 import JobberSearch from "../../components/Search/Search";
 import JobberPagination from "../../components/Pagination/Pagination";
+import showToast from "../../components/Toast/Toast";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import swal from "sweetalert";
 
 const Tables = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -53,7 +57,7 @@ const Tables = () => {
       const res = await axios.get(`${baseUrl}/user/all-users`);
       if (res.status === 200) {
         setData(res.data.data);
-        setCountData(res.data.TotalConut || 0);
+        setCountData(res.data.TotalCount || 0);
       } else {
         console.warn("Unexpected response:", res.message);
       }
@@ -107,6 +111,43 @@ const Tables = () => {
   const handleClose = () => {
     setOpenDialog(false);
   };
+  const deleteuser = async (userId) => {
+    try {
+      const willDelete = await swal({
+        title: "Are you sure?",
+        text: "You want to delete this user?",
+        icon: "warning",
+        buttons: ["Cancel", "Delete"],
+        dangerMode: true,
+      });
+
+      if (willDelete) {
+        const response = await axios.delete(
+          `${baseUrl}/user/updateuser/${userId}`
+        );
+
+        if (response.status === 200) {
+          toast.success("User deleted successfully", {
+            position: "top-center",
+            autoClose: 2000,
+          });
+
+          fetchUsers();
+
+          if (data.length === 1) {
+            setData([]);
+          }
+        } else {
+          toast.error("Failed to delete the user. Please try again.");
+        }
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error.message || error);
+      toast.error(
+        "An error occurred while deleting the user. Please try again."
+      );
+    }
+  };
 
   return (
     <>
@@ -133,6 +174,7 @@ const Tables = () => {
                       "Company Name",
                       "City",
                       "Designation",
+                      "Delete",
                     ]}
                     isDialog={true}
                     cellData={currentData.map((user, index) => ({
@@ -144,6 +186,14 @@ const Tables = () => {
                         user.CompanyName,
                         user.City,
                         user.Designation,
+                        <i
+                          className="fa-solid fa-trash"
+                          style={{ display: "flex", justifyContent: "center" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteuser(user.UserId); // Pass the UserId correctly
+                          }}
+                        ></i>,
                       ],
                     }))}
                     onDialogOpen={handleDialogOpen}
@@ -165,7 +215,7 @@ const Tables = () => {
           </Col>
         </Row>
       </Container>
-
+      <ToastContainer />
       <div style={{ width: "100%" }}>
         <Dialog
           open={openDialog}
@@ -190,7 +240,7 @@ const Tables = () => {
             }}
           >
             <DialogTitle
-            className="cardHead-detail"
+              className="cardHead-detail"
               style={{
                 fontSize: "1.8rem",
                 fontWeight: "700",

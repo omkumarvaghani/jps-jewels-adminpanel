@@ -39,6 +39,10 @@ import SpinnerDotted from "../../components/Loader/loader";
 import CustomTable from "../../components/Table/Table";
 import JobberSearch from "../../components/Search/Search";
 import JobberPagination from "../../components/Pagination/Pagination";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import swal from "sweetalert";
+import showToast from "../../components/Toast/Toast";
 
 const Addcard = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -53,10 +57,10 @@ const Addcard = () => {
 
   const getData = async () => {
     try {
-      const res = await axios.get(`       ${baseUrl}/cart/cartwithoutcheckout`);
+      const res = await axios.get(`${baseUrl}/cart/cartwithoutcheckout`);
       if (res.status === 200) {
-        setData(res.data.result.data);
-        setCountData(res.data.result.TotalConut || 0);
+        setData(res.data.data);
+        setCountData(res.data.TotalConut || 0);
       } else {
         console.warn("Unexpected response:", res.message);
       }
@@ -110,7 +114,6 @@ const Addcard = () => {
         `${baseUrl}/cart/cartpopup?AddToCartId=${rowData}`
       );
       if (response.status === 200) {
-        console.log(response, "response");
         setPopupData(response.data.data[0]);
       } else {
         console.error("Unexpected response:", response.message);
@@ -125,8 +128,46 @@ const Addcard = () => {
   };
 
   const handleImageClick = (imgUrl) => {
-    setImageUrl(imgUrl); // Set the clicked image URL to state
-    setOpen(true); // Open the modal
+    setImageUrl(imgUrl);
+    setOpen(true);
+  };
+
+  const deleteuser = async (AddToCartId) => {
+    try {
+      const willDelete = await swal({
+        title: "Are you sure?",
+        text: "You want to delete this cart?",
+        icon: "warning",
+        buttons: ["Cancel", "Delete"],
+        dangerMode: true,
+      });
+
+      if (willDelete) {
+        const response = await axios.delete(
+          `${baseUrl}/cart/updatecart/${AddToCartId}`
+        );
+
+        if (response.status === 200) {
+          toast.success("Cart deleted successfully", {
+            position: "top-center",
+            autoClose: 2000,
+          });
+
+          getData();
+          if (data.length === 1) {
+            setData([]);
+          }
+        } else {
+          showToast.error("Failed to delete the cart. Please try again.");
+        }
+      } else {
+      }
+    } catch (error) {
+      console.error("Error deleting cart:", error.message || error);
+      showToast.error(
+        "An error occurred while deleting the cart. Please try again."
+      );
+    }
   };
 
   return (
@@ -159,6 +200,7 @@ const Addcard = () => {
                       "Carats",
                       "Color",
                       "Image",
+                      "Delete",
                     ]}
                     isDialog={true}
                     cellData={currentData.map((user, index) => ({
@@ -181,6 +223,14 @@ const Addcard = () => {
                             handleImageClick(user.diamondDetails.Image);
                           }}
                         />,
+                        <i
+                          className="fa-solid fa-trash"
+                          style={{ display: "flex", justifyContent: "center" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteuser(user.AddToCartId); // Pass the UserId correctly
+                          }}
+                        ></i>,
                       ],
                     }))}
                     onDialogOpen={handleDialogOpen}
@@ -202,7 +252,7 @@ const Addcard = () => {
           </div>
         </Row>
       </Container>
-
+      <ToastContainer />
       <div style={{ width: "100%" }}>
         <Dialog
           open={openRow}

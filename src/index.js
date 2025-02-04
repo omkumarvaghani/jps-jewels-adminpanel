@@ -8,7 +8,9 @@ import "assets/scss/argon-dashboard-react.scss";
 import AdminLayout from "layouts/Admin.js";
 import AuthLayout from "layouts/Auth.js";
 import Index from "../src/views/Index";
-import "../../frontend/src/views/Style/Style.css";
+// import "../../frontend/src/views/Style/Style.css";
+// import "../src/views/Style/"impo\
+import "../src/style.css";
 
 import "@fontsource/poppins";
 

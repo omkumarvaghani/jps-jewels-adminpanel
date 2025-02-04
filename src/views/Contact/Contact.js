@@ -30,6 +30,10 @@ import {
   IconButton,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import showToast from "../../components/Toast/Toast";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import swal from "sweetalert";
 
 const Contact = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -43,7 +47,6 @@ const Contact = () => {
   const [page, setPage] = useState(0);
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogData, setDialogData] = useState(null);
-  console.log(dialogData, "dialogData");
   useEffect(() => {
     fetchUsers(1);
   }, [rowsPerPage, page]);
@@ -92,7 +95,6 @@ const Contact = () => {
       );
       if (response.status === 200) {
         setDialogData(response.data.data);
-        console.log(response, "response");
       } else {
         setDialogData(null);
       }
@@ -104,6 +106,45 @@ const Contact = () => {
 
   const handleClose = () => {
     setOpenDialog(false);
+  };
+
+  const deleteuser = async (ContactId) => {
+    try {
+      const willDelete = await swal({
+        title: "Are you sure?",
+        text: "You want to delete this contact?",
+        icon: "warning",
+        buttons: ["Cancel", "Delete"],
+        dangerMode: true,
+      });
+
+      if (willDelete) {
+        const response = await axios.delete(
+          `${baseUrl}/contact/updatecontact/${ContactId}`
+        );
+
+        if (response.status === 200) {
+          toast.success("contact deleted successfully", {
+            position: "top-center",
+            autoClose: 2000,
+          });
+
+          fetchUsers();
+          if (data.length === 1) {
+            setData([]);
+          }
+        } else {
+          showToast.error("Failed to delete the contact. Please try again.");
+        }
+      } else {
+      }
+    } catch (error) {
+      console.error("Error deleting contact:", error.message || error);
+      showToast.error(
+        "An error occurred while deleting the contact. Please try again."
+      );
+      setDialogData(null);
+    }
   };
 
   return (
@@ -131,6 +172,7 @@ const Contact = () => {
                       "Email",
                       "Subject",
                       "Message",
+                      "Delete",
                     ]}
                     isDialog={true}
                     cellData={currentData.map((user, index) => ({
@@ -145,6 +187,14 @@ const Contact = () => {
                         (user.Message && user.Message.length > 20
                           ? user.Message.substring(0, 20) + "..."
                           : user.Message) || "N/A",
+                        <i
+                          className="fa-solid fa-trash"
+                          style={{ display: "flex", justifyContent: "center" }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteuser(user.ContactId); // Pass the UserId correctly
+                          }}
+                        ></i>,
                       ],
                     }))}
                     onDialogOpen={handleDialogOpen}
@@ -167,6 +217,7 @@ const Contact = () => {
           </Col>
         </Row>
       </Container>
+      <ToastContainer />
 
       <div style={{ width: "100%" }}>
         <Dialog

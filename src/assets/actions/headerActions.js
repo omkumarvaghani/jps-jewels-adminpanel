@@ -1,9 +1,9 @@
-import axios from 'axios';
+import axios from "axios";
 
 // Action Types
-export const SET_HEADER_DATA = 'SET_HEADER_DATA';
-export const SET_LOADING = 'SET_LOADING';
-export const SET_ERROR = 'SET_ERROR';
+export const SET_HEADER_DATA = "SET_HEADER_DATA";
+export const SET_LOADING = "SET_LOADING";
+export const SET_ERROR = "SET_ERROR";
 
 // Action Creators
 export const setHeaderData = (data) => ({
@@ -20,6 +20,7 @@ export const setError = (error) => ({
   type: SET_ERROR,
   payload: error,
 });
+const baseUrl = process.env.REACT_APP_BASE_API;
 
 // Fetch header data
 export const fetchHeaderData = () => async (dispatch) => {
@@ -29,7 +30,7 @@ export const fetchHeaderData = () => async (dispatch) => {
     if (storedData) {
       dispatch(setHeaderData(JSON.parse(storedData)));
     } else {
-      const res = await axios.get("https://jpsjewels.com/api/user/countdata");
+      const res = await axios.get(`${baseUrl}/user/countdata`);
       if (res.status === 200) {
         dispatch(setHeaderData(res.data.data));
         sessionStorage.setItem("headerData", JSON.stringify(res.data.data));

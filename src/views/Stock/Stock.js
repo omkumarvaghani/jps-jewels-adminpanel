@@ -37,7 +37,10 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import SpinnerDotted from "../../components/Loader/loader";
-
+import showToast from "../../components/Toast/Toast";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import swal from "sweetalert";
 import CustomTable from "../../components/Table/Table";
 import JobberSearch from "../../components/Search/Search";
 import JobberPagination from "../../components/Pagination/Pagination";
@@ -106,7 +109,7 @@ const Tablelogin = () => {
       const res = await axios.get(`${baseUrl}/stock/data`);
       if (res.status === 200) {
         setData(res.data.result.data);
-        setCountData(res.data.result.TotalConut || 0);
+        setCountData(res.data.result.TotalCount || 0);
       } else {
         console.warn("Unexpected response:", res.message);
       }
@@ -163,7 +166,6 @@ const Tablelogin = () => {
       );
       if (response.status === 200) {
         setDialogData(response.data.data[0]);
-        console.log(response, "response1234");
       } else {
         setDialogData(null);
       }
@@ -179,6 +181,45 @@ const Tablelogin = () => {
 
   const fileModelOpen = () => {
     setUploadFile(true);
+  };
+
+  const deleteuser = async (SKU) => {
+    try {
+      const willDelete = await swal({
+        title: "Are you sure?",
+        text: "You want to delete this Stock?",
+        icon: "warning",
+        buttons: ["Cancel", "Delete"],
+        dangerMode: true,
+      });
+
+      if (willDelete) {
+        const response = await axios.delete(
+          `${baseUrl}/stock/deletestock/${SKU}`
+        );
+
+        if (response.status === 200) {
+          toast.success("Stock deleted successfully", {
+            position: "top-center",
+            autoClose: 2000,
+          });
+
+          getData();
+          if (data.length === 1) {
+            setData([]);
+          }
+        } else {
+          showToast.error("Failed to delete the Stock. Please try again.");
+        }
+      } else {
+      }
+    } catch (error) {
+      console.error("Error deleting Stock:", error.message || error);
+      showToast.error(
+        "An error occurred while deleting the Stock. Please try again."
+      );
+      setDialogData(null);
+    }
   };
 
   return (
@@ -352,6 +393,7 @@ const Tablelogin = () => {
                         "Carates",
                         "Color",
                         "Image",
+                        "Delete",
                       ]}
                       isDialog={true}
                       cellData={currentData.map((user, index) => ({
@@ -371,6 +413,18 @@ const Tablelogin = () => {
                               handleImageClick(user.Image);
                             }} // Open modal on click
                           />,
+                          <i
+                            className="fa-solid fa-trash"
+                            style={{
+                              // display: "flex",
+                              // justifyContent: "center",
+                              marginLeft: "20px",
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteuser(user.SKU); // Pass the UserId correctly
+                            }}
+                          ></i>,
                         ],
                       }))}
                       onDialogOpen={handleDialogOpen}
@@ -393,7 +447,7 @@ const Tablelogin = () => {
           </Row>
         </Card>
       </Container>
-
+      <ToastContainer />
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Image</DialogTitle>
         <DialogContent>
@@ -441,7 +495,7 @@ const Tablelogin = () => {
             style: {
               borderRadius: "20px",
               // padding: "20px",
-              maxWidth: "1000px",
+              maxWidth: "750px",
               width: "100%",
               boxShadow: "0 12px 30px rgba(0, 0, 0, 0.3)",
               overflow: "hidden",
@@ -637,7 +691,7 @@ const Tablelogin = () => {
                       <strong className="Heading">Ratio:</strong>{" "}
                       {dialogData?.Ratio || "N/A"}
                     </p>
-                   
+
                     <p>
                       <strong className="Heading">Shape:</strong>{" "}
                       {dialogData?.Shape || "N/A"}
