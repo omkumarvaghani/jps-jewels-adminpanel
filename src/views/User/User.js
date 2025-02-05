@@ -152,11 +152,7 @@ const Tables = () => {
     }
   };
 
-  const decryptData = (ciphertext) => {
-    const bytes = crypto.AES.decrypt(ciphertext, secretKey);
-    const originalText = bytes.toString(crypto.enc.Utf8);
-    return originalText;
-  };
+
 
   return (
     <>
@@ -336,10 +332,10 @@ const Tables = () => {
                     {dialogData?.[0]?.Country || "N/A"} -{" "}
                     {dialogData?.[0]?.Pincode || "N/A"}
                   </p>
-                  <p>
+                  {/* <p>
                     <strong className="Heading">User Password:</strong>{" "}
                     {dialogData?.[0]?.UserPassword || "N/A"}
-                  </p>
+                  </p> */}
                 </div>
 
                 <div>

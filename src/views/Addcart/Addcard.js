@@ -218,12 +218,12 @@ const Addcard = () => {
                         user.diamondDetails?.Color,
 
                         <img
-                          src={user.diamondDetails.Image} // Display image
+                          src={user?.diamondDetails?.Image} // Display image
                           alt="Image"
                           style={{ width: 50, height: 50, cursor: "pointer" }}
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleImageClick(user.diamondDetails.Image);
+                            handleImageClick(user?.diamondDetails?.Image);
                           }}
                         />,
                         new Date(
