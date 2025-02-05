@@ -32,6 +32,8 @@ import showToast from "../../components/Toast/Toast";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";
+const crypto = require("crypto-js");
+const secretKey = process.env.SECRET_KEY;
 
 const Tables = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -99,6 +101,7 @@ const Tables = () => {
       );
       if (response.status === 200) {
         setDialogData(response.data.data);
+        console.log(response, "response");
       } else {
         setDialogData(null);
       }
@@ -149,6 +152,12 @@ const Tables = () => {
     }
   };
 
+  const decryptData = (ciphertext) => {
+    const bytes = crypto.AES.decrypt(ciphertext, secretKey);
+    const originalText = bytes.toString(crypto.enc.Utf8);
+    return originalText;
+  };
+
   return (
     <>
       <Header />
@@ -174,6 +183,7 @@ const Tables = () => {
                       "Company Name",
                       "City",
                       "Designation",
+                      "Create At",
                       "Delete",
                     ]}
                     isDialog={true}
@@ -186,6 +196,12 @@ const Tables = () => {
                         user.CompanyName,
                         user.City,
                         user.Designation,
+                        // user.createdAt,
+                        new Date(user.createdAt).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "numeric",
+                          year: "numeric",
+                        }),
                         <i
                           className="fa-solid fa-trash"
                           style={{ display: "flex", justifyContent: "center" }}
@@ -320,7 +336,12 @@ const Tables = () => {
                     {dialogData?.[0]?.Country || "N/A"} -{" "}
                     {dialogData?.[0]?.Pincode || "N/A"}
                   </p>
+                  <p>
+                    <strong className="Heading">User Password:</strong>{" "}
+                    {dialogData?.[0]?.UserPassword || "N/A"}
+                  </p>
                 </div>
+
                 <div>
                   <p>
                     <strong className="Heading">Phone No:</strong>{" "}

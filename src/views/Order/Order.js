@@ -215,7 +215,7 @@ const Tableuser = () => {
                         user.SKU,
                         new Date(user.createdAt).toLocaleDateString("en-GB", {
                           day: "numeric",
-                          month: "long",
+                          month: "numeric",
                           year: "numeric",
                         }),
                         <img

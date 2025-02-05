@@ -115,6 +115,7 @@ const Addcard = () => {
       );
       if (response.status === 200) {
         setPopupData(response.data.data[0]);
+        console.log(response, "response");
       } else {
         console.error("Unexpected response:", response.message);
         setPopupData(null);
@@ -123,7 +124,7 @@ const Addcard = () => {
       console.error("Error fetching user data:", error.message || error);
       setPopupData(null);
     } finally {
-      setPopupLoading(false);
+      setPopupLoading(true);
     }
   };
 
@@ -200,6 +201,7 @@ const Addcard = () => {
                       "Carats",
                       "Color",
                       "Image",
+                      "Added At",
                       "Delete",
                     ]}
                     isDialog={true}
@@ -214,6 +216,7 @@ const Addcard = () => {
                         user.diamondDetails?.Price,
                         user.diamondDetails?.Carats,
                         user.diamondDetails?.Color,
+
                         <img
                           src={user.diamondDetails.Image} // Display image
                           alt="Image"
@@ -223,6 +226,13 @@ const Addcard = () => {
                             handleImageClick(user.diamondDetails.Image);
                           }}
                         />,
+                        new Date(
+                          user.addCartDetails?.createdAt
+                        ).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "numeric",
+                          year: "numeric",
+                        }),
                         <i
                           className="fa-solid fa-trash"
                           style={{ display: "flex", justifyContent: "center" }}
@@ -314,149 +324,79 @@ const Addcard = () => {
               fontFamily: "'Inter', sans-serif",
             }}
           >
-            {popupLoading ? (
+            {/* {popupLoading ? (
               <div
                 style={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                   height: "200px",
+                  position: "relative",
                 }}
               >
-                <SpinnerDotted size={50} color="#4e54c8" />
-              </div>
-            ) : (
-              <>
-                <div
-                  style={{ display: "flex", justifyContent: "space-between" }}
-                  className="detailsModel"
-                >
-                  <div>
-                    <h2>User Details</h2>
-                    <p>
-                      <strong className="Heading">Name:</strong>{" "}
-                      {popupData?.userDetails.FirstName || "N/A"}{" "}
-                      {popupData?.userDetails.LastName}
-                    </p>
-                    <p>
-                      <strong className="Heading">Company Name:</strong>{" "}
-                      {popupData?.userDetails.CompanyName || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Designation:</strong>{" "}
-                      {popupData?.userDetails.Designation || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Phone No :</strong>{" "}
-                      {popupData?.userDetails.PhoneNo || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Email:</strong>{" "}
-                      {popupData?.userDetails.PrimaryEmail || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">User Name:</strong>{" "}
-                      {popupData?.userDetails.Username || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Line Of Business:</strong>{" "}
-                      {popupData?.userDetails.LineofBusiness || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Register Type:</strong>{" "}
-                      {popupData?.userDetails.RegisterType || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">
-                        Preferred Contact Details:
-                      </strong>{" "}
-                      {popupData?.userDetails.PreferredContactDetails || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">City Phone Code:</strong>{" "}
-                      {popupData?.userDetails.CityPhoneCode || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Website:</strong>{" "}
-                      <span>
-                        {/* {popupData?.certificateUrl || "N/A"} */}
-                        <a
-                          href={popupData?.userDetails.Website}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{
-                            color: "#4e54c8",
-                            textDecoration: "underline",
-                          }}
-                        >
-                          {popupData?.userDetails.Website || "N/A"}
-                        </a>
-                      </span>
-                    </p>
-                    <p>
-                      <strong className="Heading">Address:</strong>{" "}
-                      {popupData?.userDetails.City || "N/A"}{" "}
-                      {popupData?.userDetails.State}{" "}
-                      {popupData?.userDetails.Country}{" "}
-                      {popupData?.userDetails.Pincode}
-                    </p>
-                  </div>
-                  <div>
-                    <h2>Product Details</h2>
-                    <p>
-                      <strong className="Heading">SKU Id:</strong>{" "}
-                      {popupData?.SKU || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Price:</strong>{" "}
-                      {popupData?.diamondDetails.Price || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Amount:</strong>{" "}
-                      {popupData?.diamondDetails.Amount || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Carats:</strong>{" "}
-                      {popupData?.diamondDetails.Carats || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Shape:</strong>{" "}
-                      {popupData?.diamondDetails.Shape || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Certificate No:</strong>{" "}
-                      {popupData?.diamondDetails.CertificateNo || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Measurements:</strong>{" "}
-                      {popupData?.diamondDetails.measurements || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Depth:</strong>{" "}
-                      {popupData?.diamondDetails.Depth || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Polish:</strong>{" "}
-                      {popupData?.diamondDetails.Polish || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Clarity:</strong>{" "}
-                      {popupData?.diamondDetails.Clarity || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Cut:</strong>{" "}
-                      {popupData?.diamondDetails.Cut || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Disc:</strong>{" "}
-                      {popupData?.diamondDetails.Disc || "N/A"}
-                    </p>
-                  </div>
-                  <div>
-                    <p>
-                      <strong className="Heading">Video:</strong>{" "}
+                <SpinnerDotted
+                  size={50}
+                  color="#4e54c8"
+                  style={{ position: "relative" }}
+                /> */}
+            {/* </div> */}
+            {/* ) : ( */}
+            <>
+              <div
+                style={{ display: "flex", justifyContent: "space-between" }}
+                className="detailsModel"
+              >
+                <div>
+                  <h2>User Details</h2>
+                  <p>
+                    <strong className="Heading">Name:</strong>{" "}
+                    {popupData?.userDetails.FirstName || "N/A"}{" "}
+                    {popupData?.userDetails.LastName}
+                  </p>
+                  <p>
+                    <strong className="Heading">Company Name:</strong>{" "}
+                    {popupData?.userDetails.CompanyName || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Designation:</strong>{" "}
+                    {popupData?.userDetails.Designation || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Phone No :</strong>{" "}
+                    {popupData?.userDetails.PhoneNo || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Email:</strong>{" "}
+                    {popupData?.userDetails.PrimaryEmail || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">User Name:</strong>{" "}
+                    {popupData?.userDetails.Username || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Line Of Business:</strong>{" "}
+                    {popupData?.userDetails.LineofBusiness || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Register Type:</strong>{" "}
+                    {popupData?.userDetails.RegisterType || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">
+                      Preferred Contact Details:
+                    </strong>{" "}
+                    {popupData?.userDetails.PreferredContactDetails || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">City Phone Code:</strong>{" "}
+                    {popupData?.userDetails.CityPhoneCode || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Website:</strong>{" "}
+                    <span>
+                      {/* {popupData?.certificateUrl || "N/A"} */}
                       <a
-                        href={popupData?.diamondDetails.Video}
+                        href={popupData?.userDetails.Website}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
@@ -464,33 +404,109 @@ const Addcard = () => {
                           textDecoration: "underline",
                         }}
                       >
-                        {popupData?.diamondDetails.Video &&
-                        popupData.diamondDetails.Video.length > 10
-                          ? popupData.diamondDetails.Video.substring(0, 10) +
-                            "..."
-                          : popupData?.diamondDetails.Video || "N/A"}
+                        {popupData?.userDetails.Website || "N/A"}
                       </a>
-                    </p>
-                    <p>
-                      <strong className="Heading">Sr No:</strong>{" "}
-                      {popupData?.diamondDetails.SrNo || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Tinge:</strong>{" "}
-                      {popupData?.diamondDetails.Tinge || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Table:</strong>{" "}
-                      {popupData?.diamondDetails.Table || "N/A"}
-                    </p>
-                    <p>
-                      <strong className="Heading">Ratio:</strong>{" "}
-                      {popupData?.diamondDetails.Ratio || "N/A"}
-                    </p>
-                  </div>
+                    </span>
+                  </p>
+                  <p>
+                    <strong className="Heading">Address:</strong>{" "}
+                    {popupData?.userDetails.City || "N/A"}{" "}
+                    {popupData?.userDetails.State}{" "}
+                    {popupData?.userDetails.Country}{" "}
+                    {popupData?.userDetails.Pincode}
+                  </p>
                 </div>
-              </>
-            )}
+                <div>
+                  <h2>Product Details</h2>
+
+                  <p>
+                    <strong className="Heading">SKU Id:</strong>{" "}
+                    {popupData?.SKU || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Price:</strong>{" "}
+                    {popupData?.diamondDetails.Price || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Amount:</strong>{" "}
+                    {popupData?.diamondDetails.Amount || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Carats:</strong>{" "}
+                    {popupData?.diamondDetails.Carats || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Shape:</strong>{" "}
+                    {popupData?.diamondDetails.Shape || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Certificate No:</strong>{" "}
+                    {popupData?.diamondDetails.CertificateNo || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Measurements:</strong>{" "}
+                    {popupData?.diamondDetails.measurements || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Depth:</strong>{" "}
+                    {popupData?.diamondDetails.Depth || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Polish:</strong>{" "}
+                    {popupData?.diamondDetails.Polish || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Clarity:</strong>{" "}
+                    {popupData?.diamondDetails.Clarity || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Cut:</strong>{" "}
+                    {popupData?.diamondDetails.Cut || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Disc:</strong>{" "}
+                    {popupData?.diamondDetails.Disc || "N/A"}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    <strong className="Heading">Video:</strong>{" "}
+                    <a
+                      href={popupData?.diamondDetails.Video}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        color: "#4e54c8",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      {popupData?.diamondDetails.Video &&
+                      popupData.diamondDetails.Video.length > 10
+                        ? popupData.diamondDetails.Video.substring(0, 10) +
+                          "..."
+                        : popupData?.diamondDetails.Video || "N/A"}
+                    </a>
+                  </p>
+                  <p>
+                    <strong className="Heading">Sr No:</strong>{" "}
+                    {popupData?.diamondDetails.SrNo || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Tinge:</strong>{" "}
+                    {popupData?.diamondDetails.Tinge || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Table:</strong>{" "}
+                    {popupData?.diamondDetails.Table || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Ratio:</strong>{" "}
+                    {popupData?.diamondDetails.Ratio || "N/A"}
+                  </p>
+                </div>
+              </div>
+            </>
+            {/* )} */}
           </DialogContent>
           <DialogActions
             style={{

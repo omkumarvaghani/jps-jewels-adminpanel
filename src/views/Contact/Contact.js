@@ -172,6 +172,7 @@ const Contact = () => {
                       "Email",
                       "Subject",
                       "Message",
+                      "Contact At",
                       "Delete",
                     ]}
                     isDialog={true}
@@ -187,6 +188,11 @@ const Contact = () => {
                         (user.Message && user.Message.length > 20
                           ? user.Message.substring(0, 20) + "..."
                           : user.Message) || "N/A",
+                        new Date(user.createdAt).toLocaleDateString("en-GB", {
+                          day: "numeric",
+                          month: "numeric",
+                          year: "numeric",
+                        }),
                         <i
                           className="fa-solid fa-trash"
                           style={{ display: "flex", justifyContent: "center" }}
@@ -302,6 +308,20 @@ const Contact = () => {
                   <p>
                     <strong className="Heading">Message:</strong>{" "}
                     {dialogData?.[0]?.Message || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Contact Date:</strong>{" "}
+                    {/* {dialogData?.[0]?.createdAt || "N/A"}
+                     */}
+                    {new Date(dialogData?.[0]?.createdAt).toLocaleDateString(
+                      "en-GB",
+                      {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                        time:"numeric"
+                      }
+                    )}
                   </p>
                 </div>
               </div>
