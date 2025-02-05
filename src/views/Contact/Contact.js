@@ -35,6 +35,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";
 
+import Detailloader from "../../components/DetailLOader/detailloader";
+
 const Contact = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
 
@@ -86,9 +88,11 @@ const Contact = () => {
   const indexOfFirstItem = page * rowsPerPage;
   const indexOfLastItem = indexOfFirstItem + rowsPerPage;
   const currentData = filteredData.slice(indexOfFirstItem, indexOfLastItem);
-
+  const [isLoading, setIsLoading] = useState(false);
   const handleDialogOpen = async (rowData) => {
     setOpenDialog(true);
+    setIsLoading(true);
+
     try {
       const response = await axios.get(
         `${baseUrl}/contact/contactdetailspopup?ContactId=${rowData}`
@@ -101,6 +105,8 @@ const Contact = () => {
     } catch (error) {
       console.error("Error fetching user details:", error.message || error);
       setDialogData(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -286,46 +292,50 @@ const Contact = () => {
               fontFamily: "'Inter', sans-serif",
             }}
           >
-            <>
-              <div
-                style={{ display: "flex", justifyContent: "space-between" }}
-                className="detailsModel"
-              >
-                <div>
-                  <p>
-                    <strong className="Heading">Name:</strong>{" "}
-                    {dialogData?.[0]?.Name || "N/A"}{" "}
-                    {/* {dialogData?.[0]?.LastName || "N/A"} */}
-                  </p>
-                  <p>
-                    <strong className="Heading">Email:</strong>{" "}
-                    {dialogData?.[0]?.Email || "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Subject:</strong>{" "}
-                    {dialogData?.[0]?.Subject || "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Message:</strong>{" "}
-                    {dialogData?.[0]?.Message || "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Contact Date:</strong>{" "}
-                    {/* {dialogData?.[0]?.createdAt || "N/A"}
-                     */}
-                    {new Date(dialogData?.[0]?.createdAt).toLocaleDateString(
-                      "en-GB",
-                      {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                        time:"numeric"
-                      }
-                    )}
-                  </p>
+            {isLoading ? (
+              <Detailloader /> // Show loader while data is fetching
+            ) : (
+              <>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                  className="detailsModel"
+                >
+                  <div>
+                    <p>
+                      <strong className="Heading">Name:</strong>{" "}
+                      {dialogData?.[0]?.Name || "N/A"}{" "}
+                      {/* {dialogData?.[0]?.LastName || "N/A"} */}
+                    </p>
+                    <p>
+                      <strong className="Heading">Email:</strong>{" "}
+                      {dialogData?.[0]?.Email || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Subject:</strong>{" "}
+                      {dialogData?.[0]?.Subject || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Message:</strong>{" "}
+                      {dialogData?.[0]?.Message || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Contact Date:</strong>{" "}
+                      {/* {dialogData?.[0]?.createdAt || "N/A"}
+                       */}
+                      {new Date(dialogData?.[0]?.createdAt).toLocaleDateString(
+                        "en-GB",
+                        {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric",
+                          time: "numeric",
+                        }
+                      )}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </>
+              </>
+            )}
           </DialogContent>
 
           <DialogActions

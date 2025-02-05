@@ -32,8 +32,7 @@ import showToast from "../../components/Toast/Toast";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";
-const crypto = require("crypto-js");
-const secretKey = process.env.SECRET_KEY;
+import Detailloader from "../../components/DetailLOader/detailloader";
 
 const Tables = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -93,21 +92,24 @@ const Tables = () => {
     setCurrentPage(pageNumber);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleDialogOpen = async (rowData) => {
     setOpenDialog(true);
+    setIsLoading(true); // Start loading
     try {
       const response = await axios.get(
         `${baseUrl}/user/userpopup?UserId=${rowData}`
       );
       if (response.status === 200) {
         setDialogData(response.data.data);
-        console.log(response, "response");
       } else {
         setDialogData(null);
       }
     } catch (error) {
       console.error("Error fetching user details:", error.message || error);
-      setDialogData(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -151,8 +153,6 @@ const Tables = () => {
       );
     }
   };
-
-
 
   return (
     <>
@@ -228,6 +228,8 @@ const Tables = () => {
         </Row>
       </Container>
       <ToastContainer />
+ 
+
       <div style={{ width: "100%" }}>
         <Dialog
           open={openDialog}
@@ -289,93 +291,97 @@ const Tables = () => {
               fontFamily: "'Inter', sans-serif",
             }}
           >
-            <>
-              <div
-                style={{ display: "flex", justifyContent: "space-between" }}
-                className="detailsModel"
-              >
-                <div>
-                  <p>
-                    <strong className="Heading">Name:</strong>{" "}
-                    {dialogData?.[0]?.FirstName || "N/A"}{" "}
-                    {dialogData?.[0]?.LastName || "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Email:</strong>{" "}
-                    {dialogData?.[0]?.PrimaryEmail || "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Company Name:</strong>{" "}
-                    {dialogData?.[0]?.CompanyName || "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Designation:</strong>{" "}
-                    {dialogData?.[0]?.Designation || "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Created At:</strong>{" "}
-                    {dialogData?.[0]?.createdAt
-                      ? new Intl.DateTimeFormat("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                          hour: "numeric",
-                          minute: "numeric",
-                          hour12: true,
-                        }).format(new Date(dialogData?.[0]?.createdAt))
-                      : "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Address:</strong>{" "}
-                    {dialogData?.[0]?.City || "N/A"},{" "}
-                    {dialogData?.[0]?.State || "N/A"},{" "}
-                    {dialogData?.[0]?.Country || "N/A"} -{" "}
-                    {dialogData?.[0]?.Pincode || "N/A"}
-                  </p>
-                  {/* <p>
+            {isLoading ? (
+              <Detailloader /> // Show loader while data is fetching
+            ) : (
+              <>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                  className="detailsModel"
+                >
+                  <div>
+                    <p>
+                      <strong className="Heading">Name:</strong>{" "}
+                      {dialogData?.[0]?.FirstName || "N/A"}{" "}
+                      {dialogData?.[0]?.LastName || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Email:</strong>{" "}
+                      {dialogData?.[0]?.PrimaryEmail || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Company Name:</strong>{" "}
+                      {dialogData?.[0]?.CompanyName || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Designation:</strong>{" "}
+                      {dialogData?.[0]?.Designation || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Created At:</strong>{" "}
+                      {dialogData?.[0]?.createdAt
+                        ? new Intl.DateTimeFormat("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            hour: "numeric",
+                            minute: "numeric",
+                            hour12: true,
+                          }).format(new Date(dialogData?.[0]?.createdAt))
+                        : "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Address:</strong>{" "}
+                      {dialogData?.[0]?.City || "N/A"},{" "}
+                      {dialogData?.[0]?.State || "N/A"},{" "}
+                      {dialogData?.[0]?.Country || "N/A"} -{" "}
+                      {dialogData?.[0]?.Pincode || "N/A"}
+                    </p>
+                    {/* <p>
                     <strong className="Heading">User Password:</strong>{" "}
                     {dialogData?.[0]?.UserPassword || "N/A"}
                   </p> */}
-                </div>
+                  </div>
 
-                <div>
-                  <p>
-                    <strong className="Heading">Phone No:</strong>{" "}
-                    {dialogData?.[0]?.PhoneNo || "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Line Of Business:</strong>{" "}
-                    {dialogData?.[0]?.LineofBusiness || "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Preferred Contact:</strong>{" "}
-                    {dialogData?.[0]?.PreferredContactMethod || "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Register Type:</strong>{" "}
-                    {dialogData?.[0]?.RegisterType || "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Email:</strong>{" "}
-                    {dialogData?.[0]?.SecondaryEmail || "N/A"}
-                  </p>
-                  <p>
-                    <strong className="Heading">Website:</strong>{" "}
-                    <a
-                      href={dialogData?.[0]?.Website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: "#4e54c8",
-                        textDecoration: "underline",
-                      }}
-                    >
-                      {dialogData?.[0]?.Website || "N/A"}
-                    </a>
-                  </p>
+                  <div>
+                    <p>
+                      <strong className="Heading">Phone No:</strong>{" "}
+                      {dialogData?.[0]?.PhoneNo || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Line Of Business:</strong>{" "}
+                      {dialogData?.[0]?.LineofBusiness || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Preferred Contact:</strong>{" "}
+                      {dialogData?.[0]?.PreferredContactMethod || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Register Type:</strong>{" "}
+                      {dialogData?.[0]?.RegisterType || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Email:</strong>{" "}
+                      {dialogData?.[0]?.SecondaryEmail || "N/A"}
+                    </p>
+                    <p>
+                      <strong className="Heading">Website:</strong>{" "}
+                      <a
+                        href={dialogData?.[0]?.Website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: "#4e54c8",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {dialogData?.[0]?.Website || "N/A"}
+                      </a>
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </>
+              </>
+            )}
           </DialogContent>
 
           <DialogActions

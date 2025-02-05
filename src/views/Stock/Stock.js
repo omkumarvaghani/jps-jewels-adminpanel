@@ -45,6 +45,8 @@ import CustomTable from "../../components/Table/Table";
 import JobberSearch from "../../components/Search/Search";
 import JobberPagination from "../../components/Pagination/Pagination";
 
+import Detailloader from "../../components/DetailLOader/detailloader";
+
 const Tablelogin = () => {
   const [file, setFile] = useState(null);
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -158,8 +160,11 @@ const Tablelogin = () => {
     setUploadFile(false);
   };
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleDialogOpen = async (rowData) => {
     setOpenDialog(true);
+    setIsLoading(true);
     try {
       const response = await axios.get(
         `${baseUrl}/stock/stockpopup?SkuId=${rowData}`
@@ -172,6 +177,8 @@ const Tablelogin = () => {
     } catch (error) {
       console.error("Error fetching user details:", error.message || error);
       setDialogData(null);
+    } finally {
+      setIsLoading(false);
     }
   };
   const handleImageClick = (imgUrl, e) => {
@@ -548,17 +555,8 @@ const Tablelogin = () => {
               fontFamily: "'Inter', sans-serif",
             }}
           >
-            {popupLoading ? (
-              <div
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  height: "200px",
-                }}
-              >
-                <SpinnerDotted size={50} color="#4e54c8" />
-              </div>
+            {isLoading ? (
+              <Detailloader />
             ) : (
               <>
                 <div

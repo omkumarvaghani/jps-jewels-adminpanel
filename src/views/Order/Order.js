@@ -38,6 +38,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";
 
+import Detailloader from "../../components/DetailLOader/detailloader";
+
 const Tableuser = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
 
@@ -112,8 +114,11 @@ const Tableuser = () => {
     setOpen(false);
     setOpenDialog(false);
   };
+
+  const [isLoading, setIsLoading] = useState(false);
   const handleDialogOpen = async (rowData) => {
     setOpenDialog(true);
+    setIsLoading(true);
     try {
       const response = await axios.get(
         `${baseUrl}/billing/billingpopup?BillingId=${rowData}`
@@ -126,6 +131,8 @@ const Tableuser = () => {
     } catch (error) {
       console.error("Error fetching user details:", error.message || error);
       setDialogData(null);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -318,165 +325,171 @@ const Tableuser = () => {
               fontFamily: "'Inter', sans-serif",
             }}
           >
-            <div
-              style={{ display: "flex", justifyContent: "space-between" }}
-              className="detailsModel"
-            >
-              <div>
-                <h2>User Details</h2>
-                <p>
-                  <strong className="Heading">Name:</strong>{" "}
-                  {dialogData?.[0]?.FirstName || "N/A"}{" "}
-                  {dialogData?.[0]?.LastName || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Email:</strong>{" "}
-                  {dialogData?.[0]?.ContactEmail || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Phone Number:</strong>{" "}
-                  {dialogData?.[0]?.Phone || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Address:</strong>{" "}
-                  {dialogData?.[0]?.City || "N/A"} {dialogData?.[0]?.State}{" "}
-                  {dialogData?.[0]?.Country} {dialogData?.[0]?.PinCode}
-                </p>
-                <p>
-                  <strong className="Heading">Order Date:</strong>{" "}
-                  {dialogData?.[0]?.createdAt
-                    ? new Intl.DateTimeFormat("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                        hour12: true,
-                      }).format(new Date(dialogData[0].createdAt))
-                    : "N/A"}
-                </p>
-              </div>
-              <div>
-                <h2>Product Details</h2>
-                <p>
-                  <strong className="Heading">Quantity:</strong>{" "}
-                  {dialogData?.[0]?.Quantity || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Price:</strong>{" "}
-                  {dialogData?.[0]?.Price || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Carats:</strong>{" "}
-                  {dialogData?.[0]?.Carats || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Color:</strong>{" "}
-                  {dialogData?.[0]?.Color || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Shape:</strong>{" "}
-                  {dialogData?.[0]?.Shape || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Cut:</strong>{" "}
-                  {dialogData?.[0]?.Cut || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Clarity:</strong>{" "}
-                  {dialogData?.[0]?.Clarity || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Lab:</strong>{" "}
-                  {dialogData?.[0]?.Lab || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Sku Id:</strong>{" "}
-                  {dialogData?.[0]?.SKU || "N/A"}
-                </p>
+            {isLoading ? (
+              <Detailloader /> // Show loader while data is fetching
+            ) : (
+              <div
+                style={{ display: "flex", justifyContent: "space-between" }}
+                className="detailsModel"
+              >
+                <div>
+                  <h2>User Details</h2>
+                  <p>
+                    <strong className="Heading">Name:</strong>{" "}
+                    {dialogData?.[0]?.FirstName || "N/A"}{" "}
+                    {dialogData?.[0]?.LastName || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Email:</strong>{" "}
+                    {dialogData?.[0]?.ContactEmail || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Phone Number:</strong>{" "}
+                    {dialogData?.[0]?.Phone || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Address:</strong>{" "}
+                    {dialogData?.[0]?.City || "N/A"} {dialogData?.[0]?.State}{" "}
+                    {dialogData?.[0]?.Country} {dialogData?.[0]?.PinCode}
+                  </p>
+                  <p>
+                    <strong className="Heading">Order Date:</strong>{" "}
+                    {dialogData?.[0]?.createdAt
+                      ? new Intl.DateTimeFormat("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                          hour: "numeric",
+                          minute: "numeric",
+                          hour12: true,
+                        }).format(new Date(dialogData[0].createdAt))
+                      : "N/A"}
+                  </p>
+                </div>
+                <div>
+                  <h2>Product Details</h2>
+                  <p>
+                    <strong className="Heading">Quantity:</strong>{" "}
+                    {dialogData?.[0]?.Quantity || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Price:</strong>{" "}
+                    {dialogData?.[0]?.Price || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Carats:</strong>{" "}
+                    {dialogData?.[0]?.Carats || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Color:</strong>{" "}
+                    {dialogData?.[0]?.Color || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Shape:</strong>{" "}
+                    {dialogData?.[0]?.Shape || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Cut:</strong>{" "}
+                    {dialogData?.[0]?.Cut || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Clarity:</strong>{" "}
+                    {dialogData?.[0]?.Clarity || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Lab:</strong>{" "}
+                    {dialogData?.[0]?.Lab || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Sku Id:</strong>{" "}
+                    {dialogData?.[0]?.SKU || "N/A"}
+                  </p>
 
-                <p>
-                  <strong className="Heading">Video:</strong>{" "}
-                  <span>
-                    <a
-                      href={dialogData?.[0]?.stockDetails?.[0]?.Video || "N/A"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        color: "#4e54c8",
-                        textDecoration: "underline",
-                      }}
-                    >
-                      {dialogData?.[0]?.stockDetails?.[0]?.Video &&
-                      dialogData?.[0]?.stockDetails?.[0]?.Video.length > 10
-                        ? dialogData?.[0]?.stockDetails?.[0]?.Video.substring(
-                            0,
-                            10
-                          ) + "..."
-                        : dialogData?.[0]?.stockDetails?.[0]?.Video || "N/A"}
-                    </a>
-                  </span>
-                </p>
-                <p>
-                  <strong className="Heading">Tinge:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.Tinge || "N/A"}
-                </p>
+                  <p>
+                    <strong className="Heading">Video:</strong>{" "}
+                    <span>
+                      <a
+                        href={
+                          dialogData?.[0]?.stockDetails?.[0]?.Video || "N/A"
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          color: "#4e54c8",
+                          textDecoration: "underline",
+                        }}
+                      >
+                        {dialogData?.[0]?.stockDetails?.[0]?.Video &&
+                        dialogData?.[0]?.stockDetails?.[0]?.Video.length > 10
+                          ? dialogData?.[0]?.stockDetails?.[0]?.Video.substring(
+                              0,
+                              10
+                            ) + "..."
+                          : dialogData?.[0]?.stockDetails?.[0]?.Video || "N/A"}
+                      </a>
+                    </span>
+                  </p>
+                  <p>
+                    <strong className="Heading">Tinge:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.Tinge || "N/A"}
+                  </p>
+                </div>
+                <div>
+                  <p>
+                    <strong className="Heading">Certificate No:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.CertificateNo || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Depth:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.Depth || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Disc:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.Disc || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">EyeC:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.EyeC || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Fluo Int:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.FluoInt || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Lab:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.Lab || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Milky:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.Milky || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Polish:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.Polish || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Rap:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.Rap || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Ratio:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.Ratio || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">SrNo:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.SrNo || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Symm:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.Symm || "N/A"}
+                  </p>
+                  <p>
+                    <strong className="Heading">Table:</strong>{" "}
+                    {dialogData?.[0]?.stockDetails?.[0]?.Table || "N/A"}
+                  </p>
+                </div>
               </div>
-              <div>
-                <p>
-                  <strong className="Heading">Certificate No:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.CertificateNo || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Depth:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.Depth || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Disc:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.Disc || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">EyeC:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.EyeC || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Fluo Int:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.FluoInt || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Lab:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.Lab || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Milky:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.Milky || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Polish:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.Polish || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Rap:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.Rap || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Ratio:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.Ratio || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">SrNo:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.SrNo || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Symm:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.Symm || "N/A"}
-                </p>
-                <p>
-                  <strong className="Heading">Table:</strong>{" "}
-                  {dialogData?.[0]?.stockDetails?.[0]?.Table || "N/A"}
-                </p>
-              </div>
-            </div>
+            )}
           </DialogContent>
 
           <DialogActions
