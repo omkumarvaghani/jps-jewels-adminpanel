@@ -61,9 +61,9 @@ const Tableuser = () => {
   const getData = async () => {
     try {
       const res = await axios.get(`${baseUrl}/billing/billingdata`);
-      if (res.status === 200) {
-        setData(res.data.data);
-        setCountData(res.data.totalCount || 0);
+      if (res?.status === 200) {
+        setData(res?.data?.data);
+        setCountData(res?.data?.totalCount || 0);
       }
     } catch (error) {
       console.error("Error fetching customer data:", error.message || error);
@@ -84,10 +84,10 @@ const Tableuser = () => {
     const fullName = `${user.FirstName} ${user.LastName}`.toLowerCase();
     return (
       fullName.includes(search.toLowerCase()) ||
-      user.ContactEmail.toLowerCase().includes(search.toLowerCase()) ||
-      user.Quantity.toLowerCase().includes(search.toLowerCase()) ||
-      user.Price.toLowerCase().includes(search.toLowerCase()) ||
-      user.SKU.toLowerCase().includes(search.toLowerCase())
+      user?.ContactEmail.toLowerCase().includes(search.toLowerCase()) ||
+      user?.Quantity.toLowerCase().includes(search.toLowerCase()) ||
+      user?.Price.toLowerCase().includes(search.toLowerCase()) ||
+      user?.SKU.toLowerCase().includes(search.toLowerCase())
     );
   });
 
@@ -123,7 +123,7 @@ const Tableuser = () => {
       const response = await axios.get(
         `${baseUrl}/billing/billingpopup?BillingId=${rowData}`
       );
-      if (response.status === 200) {
+      if (response?.status === 200) {
         setDialogData(response.data.data);
       } else {
         setDialogData(null);
@@ -156,14 +156,14 @@ const Tableuser = () => {
           `${baseUrl}/billing/updatebilingdata/${BillingId}`
         );
 
-        if (response.status === 200) {
+        if (response?.status === 200) {
           toast.success("Order deleted successfully", {
             position: "top-center",
             autoClose: 2000,
           });
 
           getData();
-          if (data.length === 1) {
+          if (data?.length === 1) {
             setData([]);
           }
         } else {
@@ -215,12 +215,12 @@ const Tableuser = () => {
                       key: user.BillingId,
                       value: [
                         indexOfFirstItem + index + 1,
-                        `${user.FirstName} ${user.LastName}`,
-                        user.ContactEmail,
-                        user.Quantity,
-                        user.Price,
-                        user.SKU,
-                        new Date(user.createdAt).toLocaleDateString("en-GB", {
+                        `${user?.FirstName} ${user?.LastName}`,
+                        user?.ContactEmail,
+                        user?.Quantity,
+                        user?.Price,
+                        user?.SKU,
+                        new Date(user?.createdAt).toLocaleDateString("en-GB", {
                           day: "numeric",
                           month: "numeric",
                           year: "numeric",
@@ -231,7 +231,7 @@ const Tableuser = () => {
                           style={{ width: 50, height: 50, cursor: "pointer" }}
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleImageClick(user.Image);
+                            handleImageClick(user?.Image);
                           }}
                         />,
                         <i
@@ -239,7 +239,7 @@ const Tableuser = () => {
                           style={{ display: "flex", justifyContent: "center" }}
                           onClick={(e) => {
                             e.stopPropagation();
-                            deleteuser(user.BillingId); // Pass the UserId correctly
+                            deleteuser(user?.BillingId); // Pass the UserId correctly
                           }}
                         ></i>,
                       ],
@@ -362,7 +362,7 @@ const Tableuser = () => {
                           hour: "numeric",
                           minute: "numeric",
                           hour12: true,
-                        }).format(new Date(dialogData[0].createdAt))
+                        }).format(new Date(dialogData[0]?.createdAt))
                       : "N/A"}
                   </p>
                 </div>

@@ -61,8 +61,8 @@ const Addcard = () => {
     try {
       const res = await axios.get(`${baseUrl}/cart/cartwithoutcheckout`);
       if (res.status === 200) {
-        setData(res.data.data);
-        setCountData(res.data.TotalConut || 0);
+        setData(res?.data?.data);
+        setCountData(res?.data?.TotalConut || 0);
       } else {
         console.warn("Unexpected response:", res.message);
       }
@@ -79,15 +79,15 @@ const Addcard = () => {
 
   const filteredData = data.filter((item) => {
     const fullName =
-      `${item.userDetails?.FirstName} ${item.userDetails?.LastName}`.toLowerCase();
+      `${item?.userDetails?.FirstName} ${item?.userDetails?.LastName}`.toLowerCase();
 
     return (
       fullName.includes(search.toLowerCase()) ||
-      item.userDetails?.PrimaryEmail.toLowerCase().includes(
+      item?.userDetails?.PrimaryEmail.toLowerCase().includes(
         search.toLowerCase()
       ) ||
       item.SKU.toLowerCase().includes(search.toLowerCase()) ||
-      (item.Color && item.Color.toLowerCase().includes(search.toLowerCase()))
+      (item?.Color && item?.Color.toLowerCase().includes(search.toLowerCase()))
     );
   });
 
@@ -117,7 +117,7 @@ const Addcard = () => {
         `${baseUrl}/cart/cartpopup?AddToCartId=${rowData}`
       );
       if (response.status === 200) {
-        setPopupData(response.data.data[0]);
+        setPopupData(response?.data?.data[0]);
         console.log(response, "response");
       } else {
         console.error("Unexpected response:", response.message);
@@ -151,14 +151,14 @@ const Addcard = () => {
           `${baseUrl}/cart/updatecart/${AddToCartId}`
         );
 
-        if (response.status === 200) {
+        if (response?.status === 200) {
           toast.success("Cart deleted successfully", {
             position: "top-center",
             autoClose: 2000,
           });
 
           getData();
-          if (data.length === 1) {
+          if (data?.length === 1) {
             setData([]);
           }
         } else {
@@ -212,13 +212,13 @@ const Addcard = () => {
                       key: user.AddToCartId,
                       value: [
                         indexOfFirstItem + index + 1,
-                        `${user.userDetails?.FirstName} ${user.userDetails?.LastName}`,
-                        user.userDetails?.PrimaryEmail,
-                        user.SKU,
-                        user.Quantity,
-                        user.diamondDetails?.Price,
-                        user.diamondDetails?.Carats,
-                        user.diamondDetails?.Color,
+                        `${user?.userDetails?.FirstName} ${user?.userDetails?.LastName}`,
+                        user?.userDetails?.PrimaryEmail,
+                        user?.SKU,
+                        user?.Quantity,
+                        user?.diamondDetails?.Price,
+                        user?.diamondDetails?.Carats,
+                        user?.diamondDetails?.Color,
 
                         <img
                           src={user?.diamondDetails?.Image} // Display image
@@ -241,7 +241,7 @@ const Addcard = () => {
                           style={{ display: "flex", justifyContent: "center" }}
                           onClick={(e) => {
                             e.stopPropagation();
-                            deleteuser(user.AddToCartId); // Pass the UserId correctly
+                            deleteuser(user?.AddToCartId); // Pass the UserId correctly
                           }}
                         ></i>,
                       ],
@@ -339,53 +339,53 @@ const Addcard = () => {
                     <h2>User Details</h2>
                     <p>
                       <strong className="Heading">Name:</strong>{" "}
-                      {popupData?.userDetails.FirstName || "N/A"}{" "}
-                      {popupData?.userDetails.LastName}
+                      {popupData?.userDetails?.FirstName || "N/A"}{" "}
+                      {popupData?.userDetails?.LastName}
                     </p>
                     <p>
                       <strong className="Heading">Company Name:</strong>{" "}
-                      {popupData?.userDetails.CompanyName || "N/A"}
+                      {popupData?.userDetails?.CompanyName || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Designation:</strong>{" "}
-                      {popupData?.userDetails.Designation || "N/A"}
+                      {popupData?.userDetails?.Designation || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Phone No :</strong>{" "}
-                      {popupData?.userDetails.PhoneNo || "N/A"}
+                      {popupData?.userDetails?.PhoneNo || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Email:</strong>{" "}
-                      {popupData?.userDetails.PrimaryEmail || "N/A"}
+                      {popupData?.userDetails?.PrimaryEmail || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">User Name:</strong>{" "}
-                      {popupData?.userDetails.Username || "N/A"}
+                      {popupData?.userDetails?.Username || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Line Of Business:</strong>{" "}
-                      {popupData?.userDetails.LineofBusiness || "N/A"}
+                      {popupData?.userDetails?.LineofBusiness || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Register Type:</strong>{" "}
-                      {popupData?.userDetails.RegisterType || "N/A"}
+                      {popupData?.userDetails?.RegisterType || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">
                         Preferred Contact Details:
                       </strong>{" "}
-                      {popupData?.userDetails.PreferredContactDetails || "N/A"}
+                      {popupData?.userDetails?.PreferredContactDetails || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">City Phone Code:</strong>{" "}
-                      {popupData?.userDetails.CityPhoneCode || "N/A"}
+                      {popupData?.userDetails?.CityPhoneCode || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Website:</strong>{" "}
                       <span>
                         {/* {popupData?.certificateUrl || "N/A"} */}
                         <a
-                          href={popupData?.userDetails.Website}
+                          href={popupData?.userDetails?.Website}
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{
@@ -393,16 +393,16 @@ const Addcard = () => {
                             textDecoration: "underline",
                           }}
                         >
-                          {popupData?.userDetails.Website || "N/A"}
+                          {popupData?.userDetails?.Website || "N/A"}
                         </a>
                       </span>
                     </p>
                     <p>
                       <strong className="Heading">Address:</strong>{" "}
-                      {popupData?.userDetails.City || "N/A"}{" "}
-                      {popupData?.userDetails.State}{" "}
-                      {popupData?.userDetails.Country}{" "}
-                      {popupData?.userDetails.Pincode}
+                      {popupData?.userDetails?.City || "N/A"}{" "}
+                      {popupData?.userDetails?.State}{" "}
+                      {popupData?.userDetails?.Country}{" "}
+                      {popupData?.userDetails?.Pincode}
                     </p>
                   </div>
                   <div>
@@ -414,54 +414,54 @@ const Addcard = () => {
                     </p>
                     <p>
                       <strong className="Heading">Price:</strong>{" "}
-                      {popupData?.diamondDetails.Price || "N/A"}
+                      {popupData?.diamondDetails?.Price || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Amount:</strong>{" "}
-                      {popupData?.diamondDetails.Amount || "N/A"}
+                      {popupData?.diamondDetails?.Amount || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Carats:</strong>{" "}
-                      {popupData?.diamondDetails.Carats || "N/A"}
+                      {popupData?.diamondDetails?.Carats || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Shape:</strong>{" "}
-                      {popupData?.diamondDetails.Shape || "N/A"}
+                      {popupData?.diamondDetails?.Shape || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Certificate No:</strong>{" "}
-                      {popupData?.diamondDetails.CertificateNo || "N/A"}
+                      {popupData?.diamondDetails?.CertificateNo || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Measurements:</strong>{" "}
-                      {popupData?.diamondDetails.measurements || "N/A"}
+                      {popupData?.diamondDetails?.measurements || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Depth:</strong>{" "}
-                      {popupData?.diamondDetails.Depth || "N/A"}
+                      {popupData?.diamondDetails?.Depth || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Polish:</strong>{" "}
-                      {popupData?.diamondDetails.Polish || "N/A"}
+                      {popupData?.diamondDetails?.Polish || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Clarity:</strong>{" "}
-                      {popupData?.diamondDetails.Clarity || "N/A"}
+                      {popupData?.diamondDetails?.Clarity || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Cut:</strong>{" "}
-                      {popupData?.diamondDetails.Cut || "N/A"}
+                      {popupData?.diamondDetails?.Cut || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Disc:</strong>{" "}
-                      {popupData?.diamondDetails.Disc || "N/A"}
+                      {popupData?.diamondDetails?.Disc || "N/A"}
                     </p>
                   </div>
                   <div>
                     <p>
                       <strong className="Heading">Video:</strong>{" "}
                       <a
-                        href={popupData?.diamondDetails.Video}
+                        href={popupData?.diamondDetails?.Video}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{
@@ -469,28 +469,28 @@ const Addcard = () => {
                           textDecoration: "underline",
                         }}
                       >
-                        {popupData?.diamondDetails.Video &&
-                        popupData.diamondDetails.Video.length > 10
-                          ? popupData.diamondDetails.Video.substring(0, 10) +
+                        {popupData?.diamondDetails?.Video &&
+                        popupData?.diamondDetails?.Video?.length > 10
+                          ? popupData?.diamondDetails?.Video.substring(0, 10) +
                             "..."
-                          : popupData?.diamondDetails.Video || "N/A"}
+                          : popupData?.diamondDetails?.Video || "N/A"}
                       </a>
                     </p>
                     <p>
                       <strong className="Heading">Sr No:</strong>{" "}
-                      {popupData?.diamondDetails.SrNo || "N/A"}
+                      {popupData?.diamondDetails?.SrNo || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Tinge:</strong>{" "}
-                      {popupData?.diamondDetails.Tinge || "N/A"}
+                      {popupData?.diamondDetails?.Tinge || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Table:</strong>{" "}
-                      {popupData?.diamondDetails.Table || "N/A"}
+                      {popupData?.diamondDetails?.Table || "N/A"}
                     </p>
                     <p>
                       <strong className="Heading">Ratio:</strong>{" "}
-                      {popupData?.diamondDetails.Ratio || "N/A"}
+                      {popupData?.diamondDetails?.Ratio || "N/A"}
                     </p>
                   </div>
                 </div>

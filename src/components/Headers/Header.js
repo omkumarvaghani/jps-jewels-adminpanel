@@ -2,7 +2,6 @@ import { Card, CardBody, CardTitle, Container, Row, Col } from "reactstrap";
 import { useEffect, useState } from "react";
 import AxiosInstance from "../../AxiosInstance";
 import AddCardIcon from "@mui/icons-material/AddCard";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ReceiptSharpIcon from "@mui/icons-material/ReceiptSharp";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -11,11 +10,13 @@ import "./style.css";
 const Header = () => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
-  const location = useLocation(); // Detect location changes
+  const location = useLocation();
   const baseUrl = process.env.REACT_APP_BASE_API;
+  const [loading, setLoading] = useState(false);
 
   const fetchUsers = async () => {
     try {
+      setLoading(true);
       const res = await AxiosInstance.get(`${baseUrl}/user/countdata`);
       if (res.status === 200) {
         setData(res.data.data);
@@ -24,12 +25,14 @@ const Header = () => {
       }
     } catch (error) {
       console.error("Error fetching user data:", error.message || error);
+    } finally {
+      setLoading(false);
     }
   };
-
+  
   useEffect(() => {
-    fetchUsers(); // Re-fetch data on every route change
-  }, [location]); // Dependency on location will re-trigger the effect
+    fetchUsers();
+  }, [location]);
 
   const UserNavigate = () => {
     navigate("/admin/User");

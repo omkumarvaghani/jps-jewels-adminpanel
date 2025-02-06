@@ -66,10 +66,10 @@ const Tablelogin = () => {
     setFile(selectedFile);
 
     if (selectedFile) {
-      const fileType = selectedFile.name.split(".").pop().toLowerCase();
+      const fileType = selectedFile?.name.split(".").pop().toLowerCase();
 
       if (["csv", "xlsx", "xls"].includes(fileType)) {
-        setFileName(selectedFile.name);
+        setFileName(selectedFile?.name);
         setPreview(null);
       } else {
         setFileName(null);
@@ -109,9 +109,9 @@ const Tablelogin = () => {
   const getData = async () => {
     try {
       const res = await axios.get(`${baseUrl}/stock/data`);
-      if (res.status === 200) {
-        setData(res.data.result.data);
-        setCountData(res.data.result.TotalCount || 0);
+      if (res?.status === 200) {
+        setData(res?.data?.result?.data);
+        setCountData(res?.data?.result?.TotalCount || 0);
       } else {
         console.warn("Unexpected response:", res.message);
       }
@@ -169,8 +169,8 @@ const Tablelogin = () => {
       const response = await axios.get(
         `${baseUrl}/stock/stockpopup?SkuId=${rowData}`
       );
-      if (response.status === 200) {
-        setDialogData(response.data.data[0]);
+      if (response?.status === 200) {
+        setDialogData(response?.data?.data[0]);
       } else {
         setDialogData(null);
       }
@@ -205,14 +205,14 @@ const Tablelogin = () => {
           `${baseUrl}/stock/deletestock/${SKU}`
         );
 
-        if (response.status === 200) {
+        if (response?.status === 200) {
           toast.success("Stock deleted successfully", {
             position: "top-center",
             autoClose: 2000,
           });
 
           getData();
-          if (data.length === 1) {
+          if (data?.length === 1) {
             setData([]);
           }
         } else {
@@ -407,17 +407,17 @@ const Tablelogin = () => {
                         key: user.SKU,
                         value: [
                           indexOfFirstItem + index + 1,
-                          user.SKU,
-                          user.Amount,
-                          user.Carats,
-                          user.Color,
+                          user?.SKU,
+                          user?.Amount,
+                          user?.Carats,
+                          user?.Color,
                           <img
-                            src={user.Image}
+                            src={user?.Image}
                             alt="Image"
                             style={{ width: 50, height: 50, cursor: "pointer" }}
                             onClick={(e) => {
                               e.stopPropagation();
-                              handleImageClick(user.Image);
+                              handleImageClick(user?.Image);
                             }} // Open modal on click
                           />,
                           <i
@@ -429,7 +429,7 @@ const Tablelogin = () => {
                             }}
                             onClick={(e) => {
                               e.stopPropagation();
-                              deleteuser(user.SKU); // Pass the UserId correctly
+                              deleteuser(user?.SKU); // Pass the UserId correctly
                             }}
                           ></i>,
                         ],

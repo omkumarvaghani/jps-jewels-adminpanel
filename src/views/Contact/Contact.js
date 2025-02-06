@@ -57,8 +57,8 @@ const Contact = () => {
     try {
       const res = await axios.get(`${baseUrl}/contact/contactdetails`);
       if (res.status === 200) {
-        setData(res.data.data);
-        setCountData(res.data.TotalCount || 0);
+        setData(res?.data?.data);
+        setCountData(res?.data?.TotalCount || 0);
       } else {
         console.warn("Unexpected response:", res.message);
       }
@@ -75,10 +75,10 @@ const Contact = () => {
     }`.toLowerCase();
     return (
       fullName.includes(search.toLowerCase()) ||
-      (user.Name ?? "").toLowerCase().includes(search.toLowerCase()) ||
-      (user.Email ?? "").toLowerCase().includes(search.toLowerCase()) ||
-      (user.Message ?? "").toLowerCase().includes(search.toLowerCase()) ||
-      (user.Subject ?? "").toLowerCase().includes(search.toLowerCase())
+      (user?.Name ?? "").toLowerCase().includes(search.toLowerCase()) ||
+      (user?.Email ?? "").toLowerCase().includes(search.toLowerCase()) ||
+      (user?.Message ?? "").toLowerCase().includes(search.toLowerCase()) ||
+      (user?.Subject ?? "").toLowerCase().includes(search.toLowerCase())
     );
   });
   useEffect(() => {
@@ -97,8 +97,8 @@ const Contact = () => {
       const response = await axios.get(
         `${baseUrl}/contact/contactdetailspopup?ContactId=${rowData}`
       );
-      if (response.status === 200) {
-        setDialogData(response.data.data);
+      if (response?.status === 200) {
+        setDialogData(response?.data?.data);
       } else {
         setDialogData(null);
       }
@@ -129,7 +129,7 @@ const Contact = () => {
           `${baseUrl}/contact/updatecontact/${ContactId}`
         );
 
-        if (response.status === 200) {
+        if (response?.status === 200) {
           toast.success("contact deleted successfully", {
             position: "top-center",
             autoClose: 2000,
@@ -186,14 +186,14 @@ const Contact = () => {
                       key: user.ContactId,
                       value: [
                         indexOfFirstItem + index + 1,
-                        `${user.Name || "N/A"} `,
-                        user.Email || "N/A",
-                        (user.Subject && user.Subject.length > 20
-                          ? user.Subject.substring(0, 20) + "..."
-                          : user.Subject) || "N/A",
-                        (user.Message && user.Message.length > 20
-                          ? user.Message.substring(0, 20) + "..."
-                          : user.Message) || "N/A",
+                        `${user?.Name || "N/A"} `,
+                        user?.Email || "N/A",
+                        (user?.Subject && user?.Subject?.length > 20
+                          ? user?.Subject.substring(0, 20) + "..."
+                          : user?.Subject) || "N/A",
+                        (user?.Message && user?.Message?.length > 20
+                          ? user?.Message?.substring(0, 20) + "..."
+                          : user?.Message) || "N/A",
                         new Date(user.createdAt).toLocaleDateString("en-GB", {
                           day: "numeric",
                           month: "numeric",
