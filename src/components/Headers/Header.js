@@ -23,7 +23,7 @@ const Header = () => {
   const fetchUsers = async () => {
     try {
       dispatch(setLoading(true)); // Set loading state
-      const res = await AxiosInstance.get(`${baseUrl}/user/countdata`);
+      const res = await AxiosInstance.get(`/user/countdata`);
       if (res.status === 200) {
         dispatch(setUserData(res.data.data)); // Update Redux state
       } else {

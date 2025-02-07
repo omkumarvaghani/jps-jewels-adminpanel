@@ -34,6 +34,7 @@ import showToast from "../../components/Toast/Toast";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";
+import AxiosInstance from "../../AxiosInstance";
 
 import Detailloader from "../../components/DetailLOader/detailloader";
 
@@ -55,7 +56,7 @@ const Contact = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(`${baseUrl}/contact/contactdetails`);
+      const res = await AxiosInstance.get(`/contact/contactdetails`);
       if (res.status === 200) {
         setData(res?.data?.data);
         setCountData(res?.data?.TotalCount || 0);
@@ -94,8 +95,8 @@ const Contact = () => {
     setIsLoading(true);
 
     try {
-      const response = await axios.get(
-        `${baseUrl}/contact/contactdetailspopup?ContactId=${rowData}`
+      const response = await AxiosInstance.get(
+        `/contact/contactdetailspopup?ContactId=${rowData}`
       );
       if (response?.status === 200) {
         setDialogData(response?.data?.data);
@@ -125,8 +126,8 @@ const Contact = () => {
       });
 
       if (willDelete) {
-        const response = await axios.delete(
-          `${baseUrl}/contact/updatecontact/${ContactId}`
+        const response = await AxiosInstance.delete(
+          `/contact/updatecontact/${ContactId}`
         );
 
         if (response?.status === 200) {

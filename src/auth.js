@@ -3,8 +3,6 @@ const baseUrl = process.env.REACT_APP_BASE_API;
 
 const API_URL = `${baseUrl}/superadmin/token_data`; // Your API endpoint
 
-// const getToken = () => {
-
 const getToken = () => {
   const tokens = ["authToken"];
   for (const token of tokens) {
@@ -15,8 +13,6 @@ const getToken = () => {
 };
 
 export const handleAuth = async (navigate) => {
-  const API_URL = `${baseUrl}/superadmin/token_data`;
-  // const token = localStorage.getItem("authToken");
   const token = getToken();
 
   if (!token) {
@@ -34,6 +30,7 @@ export const handleAuth = async (navigate) => {
       }
     );
 
+    // Check if response status is not 200
     if (res.data.statusCode !== 200) {
       localStorage.clear();
       navigate("/auth/login", {
@@ -42,20 +39,19 @@ export const handleAuth = async (navigate) => {
       return;
     }
 
-    const { role, superAdminId } = res.data.data;
+      const { role, superAdminId } = res.data.data;
+    console.log(res.data.data, "Response Data:");
+    console.log(superAdminId, "Superadmin ID:");
 
-    switch (role) {
-      case "Superadmin":
-        localStorage.setItem("admin_id", superAdminId);
-        break;
-      default:
-        console.error("Unrecognized role");
-        localStorage.clear();
-        navigate("/auth/login");
-        return;
+    if (role === "Superadmin" && superAdminId) {
+      localStorage.setItem("superAdminId", superAdminId);
+    } else {
+      console.error("Role is not Superadmin or superAdminId is missing");
+      localStorage.clear();
+      navigate("/auth/login");
+      return;
     }
 
-    // setTokenDecode(res.data);
     return res.data;
   } catch (error) {
     console.error("Error:", error);
@@ -70,5 +66,4 @@ export const handleAuth = async (navigate) => {
     }
   }
 };
-
-// module.exports = { handleAuth };
+F;

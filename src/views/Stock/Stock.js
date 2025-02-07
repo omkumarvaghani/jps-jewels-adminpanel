@@ -44,6 +44,7 @@ import swal from "sweetalert";
 import CustomTable from "../../components/Table/Table";
 import JobberSearch from "../../components/Search/Search";
 import JobberPagination from "../../components/Pagination/Pagination";
+import AxiosInstance from "../../AxiosInstance";
 
 import Detailloader from "../../components/DetailLOader/detailloader";
 
@@ -90,11 +91,15 @@ const Tablelogin = () => {
 
     try {
       setUploadStatus("Uploading...");
-      const response = await axios.post(`${baseUrl}/stock/students`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await AxiosInstance.post(
+        `${baseUrl}/stock/students`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       setUploadStatus("File uploaded successfully!");
     } catch (error) {
       setUploadStatus("Error uploading file.");
@@ -108,7 +113,7 @@ const Tablelogin = () => {
 
   const getData = async () => {
     try {
-      const res = await axios.get(`${baseUrl}/stock/data`);
+      const res = await AxiosInstance.get(`${baseUrl}/stock/data`);
       if (res?.status === 200) {
         setData(res?.data?.result?.data);
         setCountData(res?.data?.result?.TotalCount || 0);
@@ -166,7 +171,7 @@ const Tablelogin = () => {
     setOpenDialog(true);
     setIsLoading(true);
     try {
-      const response = await axios.get(
+      const response = await AxiosInstance.get(
         `${baseUrl}/stock/stockpopup?SkuId=${rowData}`
       );
       if (response?.status === 200) {
@@ -201,7 +206,7 @@ const Tablelogin = () => {
       });
 
       if (willDelete) {
-        const response = await axios.delete(
+        const response = await AxiosInstance.delete(
           `${baseUrl}/stock/deletestock/${SKU}`
         );
 

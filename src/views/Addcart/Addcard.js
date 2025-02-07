@@ -45,6 +45,7 @@ import swal from "sweetalert";
 import showToast from "../../components/Toast/Toast";
 
 import Detailloader from "../../components/DetailLOader/detailloader";
+import AxiosInstance from "../../AxiosInstance";
 
 const Addcard = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -59,7 +60,9 @@ const Addcard = () => {
 
   const getData = async () => {
     try {
-      const res = await axios.get(`${baseUrl}/cart/cartwithoutcheckout`);
+      const res = await AxiosInstance.get(
+        `/cart/cartwithoutcheckout`
+      );
       if (res.status === 200) {
         setData(res?.data?.data);
         setCountData(res?.data?.TotalConut || 0);
@@ -113,8 +116,8 @@ const Addcard = () => {
     setOpenRow(true);
 
     try {
-      const response = await axios.get(
-        `${baseUrl}/cart/cartpopup?AddToCartId=${rowData}`
+      const response = await AxiosInstance.get(
+        `/cart/cartpopup?AddToCartId=${rowData}`
       );
       if (response.status === 200) {
         setPopupData(response?.data?.data[0]);
@@ -147,8 +150,8 @@ const Addcard = () => {
       });
 
       if (willDelete) {
-        const response = await axios.delete(
-          `${baseUrl}/cart/updatecart/${AddToCartId}`
+        const response = await AxiosInstance.delete(
+          `/cart/updatecart/${AddToCartId}`
         );
 
         if (response?.status === 200) {

@@ -33,6 +33,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";
 import Detailloader from "../../components/DetailLOader/detailloader";
+import AxiosInstance from "../../AxiosInstance";
 
 const Tables = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -55,7 +56,7 @@ const Tables = () => {
 
   const fetchUsers = async () => {
     try {
-      const res = await axios.get(`${baseUrl}/user/all-users`);
+      const res = await AxiosInstance.get(`${baseUrl}/user/all-users`);
       if (res.status === 200) {
         setData(res.data.data);
         setCountData(res.data.TotalCount || 0);
@@ -98,7 +99,7 @@ const Tables = () => {
     setOpenDialog(true);
     setIsLoading(true); // Start loading
     try {
-      const response = await axios.get(
+      const response = await AxiosInstance.get(
         `${baseUrl}/user/userpopup?UserId=${rowData}`
       );
       if (response.status === 200) {
@@ -127,7 +128,7 @@ const Tables = () => {
       });
 
       if (willDelete) {
-        const response = await axios.delete(
+        const response = await AxiosInstance.delete(
           `${baseUrl}/user/updateuser/${userId}`
         );
 
@@ -228,7 +229,6 @@ const Tables = () => {
         </Row>
       </Container>
       <ToastContainer />
- 
 
       <div style={{ width: "100%" }}>
         <Dialog

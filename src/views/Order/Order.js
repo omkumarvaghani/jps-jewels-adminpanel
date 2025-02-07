@@ -39,7 +39,7 @@ import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";
 
 import Detailloader from "../../components/DetailLOader/detailloader";
-
+import AxiosInstance from "../../AxiosInstance";
 const Tableuser = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
 
@@ -49,7 +49,6 @@ const Tableuser = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageItem, setPageItem] = React.useState(10);
-  const [leasedropdownOpen, setLeaseDropdownOpen] = React.useState(false);
   const [countData, setCountData] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
@@ -60,7 +59,7 @@ const Tableuser = () => {
 
   const getData = async () => {
     try {
-      const res = await axios.get(`${baseUrl}/billing/billingdata`);
+      const res = await AxiosInstance.get(`${baseUrl}/billing/billingdata`);
       if (res?.status === 200) {
         setData(res?.data?.data);
         setCountData(res?.data?.totalCount || 0);
@@ -120,7 +119,7 @@ const Tableuser = () => {
     setOpenDialog(true);
     setIsLoading(true);
     try {
-      const response = await axios.get(
+      const response = await AxiosInstance.get(
         `${baseUrl}/billing/billingpopup?BillingId=${rowData}`
       );
       if (response?.status === 200) {
@@ -152,11 +151,12 @@ const Tableuser = () => {
       });
 
       if (willDelete) {
-        const response = await axios.delete(
-          `${baseUrl}/billing/updatebilingdata/${BillingId}`
+        const response = await AxiosInstance.delete(
+          `${baseUrl}/billing/deletebilingdata/${BillingId}`
         );
-
+        console.log(response, "response");
         if (response?.status === 200) {
+          console.log(response, "response");
           toast.success("Order deleted successfully", {
             position: "top-center",
             autoClose: 2000,
@@ -326,7 +326,7 @@ const Tableuser = () => {
             }}
           >
             {isLoading ? (
-              <Detailloader /> // Show loader while data is fetching
+              <Detailloader />        
             ) : (
               <div
                 style={{ display: "flex", justifyContent: "space-between" }}

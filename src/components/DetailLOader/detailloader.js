@@ -10,7 +10,6 @@ const search = (loading, setLoading) => {
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
-        //   position: "absolute",
           marginTop: "50px",
         }}
       >

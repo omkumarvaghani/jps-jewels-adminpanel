@@ -49,7 +49,7 @@ const Login = () => {
   });
 
   const [data, setData] = useState([]);
-
+  console.log(data, "data");
   const handleSubmit = async (values) => {
     try {
       const res = await axios.post(
@@ -65,11 +65,31 @@ const Login = () => {
         }
       );
 
+      console.log(res, "Full response object");
+      console.log(res.data, "res.data");
+
       if (res.status === 200) {
         const token = res.data.token;
-        if (token) {
-          localStorage.setItem("authToken", token);
+        let SuperadminId;
+
+        if (res.data.superadminId) {
+          SuperadminId = res.data.superadminId;
+        } else if (res.data.data && res.data.data.superadminId) {
+          SuperadminId = res.data.data.superadminId;
         }
+
+        console.log(SuperadminId, "SuperadminId from response");
+
+        if (token) {
+          localStorage.setItem("authorization", token);
+        }
+
+        if (SuperadminId) {
+          localStorage.setItem("id", SuperadminId);
+        } else {
+          console.warn("SuperadminId is missing in the response");
+        }
+
         setData(res.data.data);
         toast.success("Login successful! Welcome!", {
           position: "top-center",
@@ -94,7 +114,6 @@ const Login = () => {
           autoClose: 2000,
         });
       } else {
-        // Fallback error if something unexpected happens
         console.error("Error during login:", error.message || error);
         toast.error("Something went wrong. Please try again!", {
           position: "top-center",
