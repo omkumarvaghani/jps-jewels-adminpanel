@@ -45,6 +45,7 @@ import CustomTable from "../../components/Table/Table";
 import JobberSearch from "../../components/Search/Search";
 import JobberPagination from "../../components/Pagination/Pagination";
 import AxiosInstance from "../../AxiosInstance";
+import Tooltip from "@mui/material/Tooltip";
 
 import Detailloader from "../../components/DetailLOader/detailloader";
 
@@ -61,7 +62,7 @@ const Tablelogin = () => {
   const [page, setPage] = useState(0);
   const [uploadFile, setUploadFile] = useState(false);
   const [fileName, setFileName] = useState();
-
+  console.log(fileName, "fileName");
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
@@ -412,10 +413,10 @@ const Tablelogin = () => {
                         key: user.SKU,
                         value: [
                           indexOfFirstItem + index + 1,
-                          user?.SKU,
-                          user?.Amount,
-                          user?.Carats,
-                          user?.Color,
+                          user?.SKU || "N/A",
+                          user?.Amount || "N/A",
+                          user?.Carats || "N/A",
+                          user?.Color || "N/A",
                           <img
                             src={user?.Image}
                             alt="Image"
@@ -425,18 +426,20 @@ const Tablelogin = () => {
                               handleImageClick(user?.Image);
                             }} // Open modal on click
                           />,
-                          <i
-                            className="fa-solid fa-trash"
-                            style={{
-                              // display: "flex",
-                              // justifyContent: "center",
-                              marginLeft: "20px",
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteuser(user?.SKU); // Pass the UserId correctly
-                            }}
-                          ></i>,
+                          <Tooltip title="Delete" arrow>
+                            <i
+                              className="fa-solid fa-trash"
+                              style={{
+                                // display: "flex",
+                                // justifyContent: "center",
+                                marginLeft: "20px",
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteuser(user?.SKU); // Pass the UserId correctly
+                              }}
+                            ></i>{" "}
+                          </Tooltip>,
                         ],
                       }))}
                       onDialogOpen={handleDialogOpen}

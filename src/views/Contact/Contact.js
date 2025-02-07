@@ -35,6 +35,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";
 import AxiosInstance from "../../AxiosInstance";
+import Tooltip from "@mui/material/Tooltip";
 
 import Detailloader from "../../components/DetailLOader/detailloader";
 
@@ -195,19 +196,27 @@ const Contact = () => {
                         (user?.Message && user?.Message?.length > 20
                           ? user?.Message?.substring(0, 20) + "..."
                           : user?.Message) || "N/A",
-                        new Date(user.createdAt).toLocaleDateString("en-GB", {
-                          day: "numeric",
-                          month: "numeric",
-                          year: "numeric",
-                        }),
-                        <i
-                          className="fa-solid fa-trash"
-                          style={{ display: "flex", justifyContent: "center" }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            deleteuser(user.ContactId); // Pass the UserId correctly
-                          }}
-                        ></i>,
+                        new Date(user.createdAt).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "numeric",
+                            year: "numeric",
+                          } || "N/A"
+                        ),
+                        <Tooltip title="Delete" arrow>
+                          <i
+                            className="fa-solid fa-trash"
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteuser(user.ContactId); // Pass the UserId correctly
+                            }}
+                          ></i>
+                        </Tooltip>,
                       ],
                     }))}
                     onDialogOpen={handleDialogOpen}

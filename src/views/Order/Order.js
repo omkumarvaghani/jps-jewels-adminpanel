@@ -37,6 +37,7 @@ import showToast from "../../components/Toast/Toast";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";
+import Tooltip from "@mui/material/Tooltip";
 
 import Detailloader from "../../components/DetailLOader/detailloader";
 import AxiosInstance from "../../AxiosInstance";
@@ -215,16 +216,19 @@ const Tableuser = () => {
                       key: user.BillingId,
                       value: [
                         indexOfFirstItem + index + 1,
-                        `${user?.FirstName} ${user?.LastName}`,
-                        user?.ContactEmail,
-                        user?.Quantity,
-                        user?.Price,
-                        user?.SKU,
-                        new Date(user?.createdAt).toLocaleDateString("en-GB", {
-                          day: "numeric",
-                          month: "numeric",
-                          year: "numeric",
-                        }),
+                        `${user?.FirstName} ${user?.LastName}` || "N/A",
+                        user?.ContactEmail || "N/A",
+                        user?.Quantity || "N/A",
+                        user?.Price || "N/A",
+                        user?.SKU || "N/A",
+                        new Date(user?.createdAt).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "numeric",
+                            year: "numeric",
+                          } || "N/A"
+                        ),
                         <img
                           src={user.Image}
                           alt="Image"
@@ -234,14 +238,19 @@ const Tableuser = () => {
                             handleImageClick(user?.Image);
                           }}
                         />,
-                        <i
-                          className="fa-solid fa-trash"
-                          style={{ display: "flex", justifyContent: "center" }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            deleteuser(user?.BillingId); // Pass the UserId correctly
-                          }}
-                        ></i>,
+                        <Tooltip title="Delete" arrow>
+                          <i
+                            className="fa-solid fa-trash"
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteuser(user?.BillingId); // Pass the UserId correctly
+                            }}
+                          ></i>
+                        </Tooltip>,
                       ],
                     }))}
                     onDialogOpen={handleDialogOpen}
@@ -326,7 +335,7 @@ const Tableuser = () => {
             }}
           >
             {isLoading ? (
-              <Detailloader />        
+              <Detailloader />
             ) : (
               <div
                 style={{ display: "flex", justifyContent: "space-between" }}

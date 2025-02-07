@@ -43,9 +43,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";
 import showToast from "../../components/Toast/Toast";
-
+import ToolTip from "../../components/Tooltip/Tooltio";
 import Detailloader from "../../components/DetailLOader/detailloader";
 import AxiosInstance from "../../AxiosInstance";
+import Tooltip from "@mui/material/Tooltip";
 
 const Addcard = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -60,9 +61,7 @@ const Addcard = () => {
 
   const getData = async () => {
     try {
-      const res = await AxiosInstance.get(
-        `/cart/cartwithoutcheckout`
-      );
+      const res = await AxiosInstance.get(`/cart/cartwithoutcheckout`);
       if (res.status === 200) {
         setData(res?.data?.data);
         setCountData(res?.data?.TotalConut || 0);
@@ -215,13 +214,14 @@ const Addcard = () => {
                       key: user.AddToCartId,
                       value: [
                         indexOfFirstItem + index + 1,
-                        `${user?.userDetails?.FirstName} ${user?.userDetails?.LastName}`,
-                        user?.userDetails?.PrimaryEmail,
-                        user?.SKU,
-                        user?.Quantity,
-                        user?.diamondDetails?.Price,
-                        user?.diamondDetails?.Carats,
-                        user?.diamondDetails?.Color,
+                        `${user?.userDetails?.FirstName} ${user?.userDetails?.LastName}` ||
+                          "N/A",
+                        user?.userDetails?.PrimaryEmail || "N/A",
+                        user?.SKU || "N/A",
+                        user?.Quantity || "N/A",
+                        user?.diamondDetails?.Price || "N/A",
+                        user?.diamondDetails?.Carats || "N/A",
+                        user?.diamondDetails?.Color || "N/A",
 
                         <img
                           src={user?.diamondDetails?.Image} // Display image
@@ -234,19 +234,29 @@ const Addcard = () => {
                         />,
                         new Date(
                           user.addCartDetails?.createdAt
-                        ).toLocaleDateString("en-GB", {
-                          day: "numeric",
-                          month: "numeric",
-                          year: "numeric",
-                        }),
-                        <i
-                          className="fa-solid fa-trash"
-                          style={{ display: "flex", justifyContent: "center" }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            deleteuser(user?.AddToCartId); // Pass the UserId correctly
-                          }}
-                        ></i>,
+                        ).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "numeric",
+                            year: "numeric",
+                          } || "N/A"
+                        ),
+                        <Tooltip title="Delete" arrow>
+                          <i
+                            className="fa-solid fa-trash"
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteuser(user?.AddToCartId); // Pass the UserId correctly
+                            }}
+                          >
+                            {/* <ToolTip /> */}
+                          </i>
+                        </Tooltip>,
                       ],
                     }))}
                     onDialogOpen={handleDialogOpen}

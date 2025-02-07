@@ -34,6 +34,7 @@ import "react-toastify/dist/ReactToastify.css";
 import swal from "sweetalert";
 import Detailloader from "../../components/DetailLOader/detailloader";
 import AxiosInstance from "../../AxiosInstance";
+import Tooltip from "@mui/material/Tooltip";
 
 const Tables = () => {
   const baseUrl = process.env.REACT_APP_BASE_API;
@@ -188,25 +189,33 @@ const Tables = () => {
                       key: user.UserId,
                       value: [
                         indexOfFirstItem + index + 1,
-                        `${user.FirstName} ${user.LastName}`,
-                        user.PrimaryEmail,
-                        user.CompanyName,
-                        user.City,
-                        user.Designation,
+                        `${user.FirstName} ${user.LastName} ` || "N/A",
+                        user.PrimaryEmail || "N/A",
+                        user.CompanyName || "N/A",
+                        user.City || "N/A",
+                        user.Designation || "N/A",
                         // user.createdAt,
-                        new Date(user.createdAt).toLocaleDateString("en-GB", {
-                          day: "numeric",
-                          month: "numeric",
-                          year: "numeric",
-                        }),
-                        <i
-                          className="fa-solid fa-trash"
-                          style={{ display: "flex", justifyContent: "center" }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            deleteuser(user.UserId); // Pass the UserId correctly
-                          }}
-                        ></i>,
+                        new Date(user.createdAt).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "numeric",
+                            year: "numeric",
+                          } || "N/A"
+                        ),
+                        <Tooltip title="Delete" arrow>
+                          <i
+                            className="fa-solid fa-trash"
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                            }}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              deleteuser(user.UserId); // Pass the UserId correctly
+                            }}
+                          ></i>
+                        </Tooltip>,
                       ],
                     }))}
                     onDialogOpen={handleDialogOpen}
